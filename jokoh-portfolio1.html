@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jokoh - Multimedia Designer Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Permanent+Marker&family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #1a1a1a;
+            --white: #fafafa;
+            --sketch: #2d2d2d;
+            --accent: #ff6b35;
+            --accent-blue: #4ecdc4;
+            --accent-yellow: #ffe66d;
+            --light-gray: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="8" fill="none" stroke="%23ff6b35" stroke-width="2"/></svg>') 10 10, auto;
+        }
+
+        /* Sketchy background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: 0;
+            pointer-events: none;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, var(--black) 2px, var(--black) 3px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, var(--black) 2px, var(--black) 3px);
+            background-size: 50px 50px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--black);
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2.5rem;
+            color: var(--black);
+            text-decoration: none;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent);
+            transform: skewX(-10deg);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Reel Button */
+        .reel-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 1000;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid var(--black);
+            box-shadow: 5px 5px 0 var(--black);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .reel-btn:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 8px 8px 0 var(--black);
+        }
+
+        .reel-btn::before {
+            content: '▶';
+            font-size: 2rem;
+            color: white;
+        }
+
+        .reel-tooltip {
+            position: absolute;
+            right: 100px;
+            background: var(--black);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'Caveat', cursive;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .reel-btn:hover .reel-tooltip {
+            opacity: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 60px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-sketch {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .sketch-circle {
+            width: 400px;
+            height: 400px;
+            border: 8px dashed var(--accent);
+            border-radius: 50%;
+            position: absolute;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .sketch-circle:nth-child(1) { top: 10%; left: 5%; }
+        .sketch-circle:nth-child(2) { bottom: 15%; right: 10%; width: 300px; height: 300px; }
+
+        h1 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1.1;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1 {
+            animation: slideInLeft 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -20px;
+            right: -20px;
+            height: 20px;
+            background: var(--accent-yellow);
+            z-index: -1;
+            transform: skewX(-5deg);
+        }
+
+        .subtitle {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 300;
+            margin-bottom: 40px;
+            font-family: 'Caveat', cursive;
+            animation: slideInRight 1s ease-out 0.2s backwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 50px;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            border: 3px solid var(--black);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--black);
+            box-shadow: 5px 5px 0 var(--black);
+        }
+
+        .btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 3px 3px 0 var(--black);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        /* Section styling */
+        section {
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            transform: translateY(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -100px;
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            transform: translateY(-50%);
+        }
+
+        .section-subtitle {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: #666;
+        }
+
+        /* Work Section */
+        .work {
+            background: var(--light-gray);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: white;
+            border: 4px solid var(--black);
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent), var(--accent-blue), var(--accent-yellow));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translate(-5px, -5px);
+            box-shadow: 15px 15px 0 rgba(0,0,0,0.15);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::after {
+            content: 'VIEW PROJECT';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-image::after {
+            opacity: 1;
+        }
+
+        .project-content {
+            padding: 30px;
+        }
+
+        .project-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--black);
+        }
+
+        .project-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: var(--light-gray);
+            border: 2px solid var(--black);
+            font-size: 0.9rem;
+            font-weight: 600;
+            transform: skewX(-5deg);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            padding: 40px;
+            background: var(--light-gray);
+            border: 3px solid var(--black);
+            position: relative;
+            transform: rotate(-1deg);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:nth-child(even) {
+            transform: rotate(1deg);
+        }
+
+        .testimonial-card:hover {
+            transform: rotate(0deg) translateY(-10px);
+            box-shadow: 8px 8px 0 var(--accent);
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: -30px;
+            left: 20px;
+            font-size: 8rem;
+            font-family: 'Permanent Marker', cursive;
+            color: var(--accent);
+            opacity: 0.3;
+        }
+
+        .testimonial-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .testimonial-role {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* About Section */
+        .about {
+            background: var(--light-gray);
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image-container {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border: 5px solid var(--black);
+            box-shadow: 15px 15px 0 var(--accent);
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .about-image-container::after {
+            content: 'Joseph Koh';
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            transform: rotate(-2deg);
+        }
+
+        .about-text h3 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .about-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .skill-category {
+            background: white;
+            padding: 30px;
+            border: 3px solid var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .skill-category h4 {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 10px 0;
+            font-size: 1.1rem;
+            color: #666;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .skill-category li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Social Media Analytics */
+        .analytics {
+            background: white;
+            padding: 120px 60px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 50px 30px;
+            background: var(--light-gray);
+            border: 4px solid var(--black);
+            position: relative;
+            transform: rotate(-2deg);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .stat-card:hover {
+            transform: rotate(0deg) scale(1.05);
+            box-shadow: 10px 10px 0 var(--accent);
+        }
+
+        .stat-number {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .stat-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Process Section - Collage Style */
+        .process {
+            background: var(--black);
+            color: white;
+            padding: 120px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process .section-title,
+        .process .section-subtitle {
+            color: white;
+        }
+
+        .process .section-title::before,
+        .process .section-title::after {
+            background: var(--accent-yellow);
+        }
+
+        .sketch-collage {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 800px;
+        }
+
+        .sketch-item {
+            position: absolute;
+            background: white;
+            padding: 15px;
+            border: 3px solid white;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .sketch-item:hover {
+            transform: scale(1.1) rotate(0deg) !important;
+            z-index: 100 !important;
+            box-shadow: 15px 15px 50px rgba(255,107,53,0.5);
+        }
+
+        .sketch-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .sketch-caption {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            color: var(--accent-yellow);
+            text-align: center;
+        }
+
+        /* Sketch item positioning */
+        .sketch-item:nth-child(1) {
+            top: 50px;
+            left: 5%;
+            width: 300px;
+            height: 250px;
+            transform: rotate(-5deg);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .sketch-item:nth-child(2) {
+            top: 80px;
+            right: 8%;
+            width: 280px;
+            height: 280px;
+            transform: rotate(4deg);
+            animation: float 7s ease-in-out infinite 1s;
+        }
+
+        .sketch-item:nth-child(3) {
+            top: 350px;
+            left: 15%;
+            width: 320px;
+            height: 240px;
+            transform: rotate(2deg);
+            animation: float 8s ease-in-out infinite 2s;
+        }
+
+        .sketch-item:nth-child(4) {
+            top: 380px;
+            right: 12%;
+            width: 290px;
+            height: 290px;
+            transform: rotate(-3deg);
+            animation: float 7.5s ease-in-out infinite 0.5s;
+        }
+
+        .sketch-item:nth-child(5) {
+            top: 180px;
+            left: 40%;
+            width: 260px;
+            height: 260px;
+            transform: rotate(6deg);
+            animation: float 6.5s ease-in-out infinite 1.5s;
+        }
+
+        .sketch-item:nth-child(6) {
+            bottom: 50px;
+            left: 25%;
+            width: 300px;
+            height: 220px;
+            transform: rotate(-4deg);
+            animation: float 7s ease-in-out infinite 2.5s;
+        }
+
+        /* Placeholder sketch backgrounds */
+        .sketch-bg-1 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .sketch-bg-2 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .sketch-bg-3 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .sketch-bg-4 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .sketch-bg-5 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        .sketch-bg-6 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
+        /* Footer */
+        footer {
+            background: var(--black);
+            color: white;
+            padding: 60px;
+            text-align: center;
+            border-top: 5px solid var(--accent);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            width: 60px;
+            height: 60px;
+            border: 3px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 10px 20px rgba(255,107,53,0.5);
+        }
+
+        .footer-text {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            nav {
+                padding: 20px 30px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            section {
+                padding: 80px 30px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .section-title::before,
+            .section-title::after {
+                display: none;
+            }
+
+            .sketch-collage {
+                min-height: 1200px;
+            }
+
+            .sketch-item {
+                position: relative !important;
+                display: block;
+                margin: 30px auto;
+                left: 0 !important;
+                right: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#home" class="logo">JOKOH</a>
+        <ul class="nav-links">
+            <li><a href="#work">Work</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Reel Button -->
+    <div class="reel-btn">
+        <span class="reel-tooltip">Watch My Reel</span>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="sketch-circle"></div>
+        <div class="sketch-circle"></div>
+        <div class="hero-content">
+            <h1>JOSEPH KOH</h1>
+            <p class="subtitle">Multimedia Designer crafting visual stories that move</p>
+            <div class="cta-buttons">
+                <a href="#work" class="btn btn-primary">View My Work</a>
+                <a href="#contact" class="btn">Let's Connect</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Section -->
+    <section id="work" class="work">
+        <div class="section-header">
+            <h2 class="section-title">Featured Work</h2>
+            <p class="section-subtitle">A curated selection of my best projects</p>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card fade-in">
+                <div class="project-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Shaco: Cat in the Box</h3>
+                    <p class="project-description">
+                        Complete character design and animation concept for TFT Tactician featuring chibi-style 
+                        character art, environment design, and 10-second victory finisher storyboard.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Character Design</span>
+                        <span class="tag">Animation</span>
+                        <span class="tag">Concept Art</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Brand Motion Graphics</h3>
+                    <p class="project-description">
+                        Dynamic motion graphics package for social media campaigns, featuring animated logos, 
+                        transitions, and eye-catching visual effects that increased engagement by 300%.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">After Effects</span>
+                        <span class="tag">Motion Design</span>
+                        <span class="tag">Branding</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Product Launch Video</h3>
+                    <p class="project-description">
+                        3D animated product showcase combining Blender renders with motion graphics. 
+                        Delivered a cinematic presentation that helped secure $2M in pre-orders.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Blender</span>
+                        <span class="tag">3D Animation</span>
+                        <span class="tag">Compositing</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Explainer Animation Series</h3>
+                    <p class="project-description">
+                        Series of 2D animated explainer videos for tech startup. Combined hand-drawn 
+                        illustrations with smooth character animation to simplify complex concepts.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">2D Animation</span>
+                        <span class="tag">Illustration</span>
+                        <span class="tag">Storytelling</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="project-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">Social Media Campaign</h3>
+                    <p class="project-description">
+                        Comprehensive social media content strategy and design for fashion brand. 
+                        Created templates, animations, and graphics that grew following by 50K in 3 months.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Social Media</span>
+                        <span class="tag">Figma</span>
+                        <span class="tag">Content Strategy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2 class="section-title">What Clients Say</h2>
+            <p class="section-subtitle">Trusted by brands and creators worldwide</p>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">
+                    Joseph's motion graphics work is simply outstanding. He transformed our brand identity 
+                    with animations that perfectly captured our energy and vision.
+                </p>
+                <p class="testimonial-author">Sarah Chen</p>
+                <p class="testimonial-role">Marketing Director, TechFlow</p>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">
+                    Working with Jokoh was a game-changer. His 3D renders and product animations 
+                    took our launch campaign to the next level. Highly recommended!
+                </p>
+                <p class="testimonial-author">Marcus Johnson</p>
+                <p class="testimonial-role">CEO, InnovateLabs</p>
+            </div>
+
+            <div class="testimonial-card fade-in">
+                <p class="testimonial-text">
+                    Incredible attention to detail and creativity. Joseph delivered animations that 
+                    exceeded our expectations and helped us stand out in a crowded market.
+                </p>
+                <p class="testimonial-author">Emily Rodriguez</p>
+                <p class="testimonial-role">Creative Lead, Pulse Media</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="section-header">
+            <h2 class="section-title">About Me</h2>
+            <p class="section-subtitle">Multimedia designer with a passion for visual storytelling</p>
+        </div>
+        <div class="about-content fade-in">
+            <div class="about-image">
+                <div class="about-image-container">
+                    <!-- Placeholder for Joseph's photo -->
+                </div>
+            </div>
+            <div class="about-text">
+                <h3>Hey, I'm Joseph!</h3>
+                <p>
+                    I'm a multimedia designer specializing in motion graphics, 3D animation, and visual design. 
+                    With over 5 years of experience, I help brands tell their stories through compelling visuals 
+                    that capture attention and drive engagement.
+                </p>
+                <p>
+                    From concept to final render, I bring ideas to life using industry-leading tools and 
+                    a creative approach that blends technical skill with artistic vision. Whether it's 
+                    character design, product animation, or social media content, I craft experiences 
+                    that resonate with audiences.
+                </p>
+                <p>
+                    When I'm not pushing pixels or keyframes, you'll find me sketching ideas, exploring 
+                    new animation techniques, or collaborating with fellow creatives to push the boundaries 
+                    of what's possible in digital design.
+                </p>
+
+                <!-- Skills -->
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h4>Motion Graphics</h4>
+                        <ul>
+                            <li>After Effects</li>
+                            <li>Blender</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Design</h4>
+                        <ul>
+                            <li>Photoshop</li>
+                            <li>Illustrator</li>
+                            <li>Figma</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h4>2D/3D Animation</h4>
+                        <ul>
+                            <li>Photoshop</li>
+                            <li>Clip Studio Paint</li>
+                            <li>Blender</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h4>Editing</h4>
+                        <ul>
+                            <li>Premiere Pro</li>
+                            <li>Sony Vegas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Analytics -->
+    <section class="analytics">
+        <div class="section-header">
+            <h2 class="section-title">Impact & Reach</h2>
+            <p class="section-subtitle">Delivering measurable results through creative excellence</p>
+        </div>
+        <div class="analytics-grid">
+            <div class="stat-card fade-in">
+                <span class="stat-number">2M+</span>
+                <p class="stat-label">Total Reach</p>
+                <p class="stat-description">Across all platforms</p>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-number">350%</span>
+                <p class="stat-label">Avg. Engagement</p>
+                <p class="stat-description">Increase in campaigns</p>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-number">50K+</span>
+                <p class="stat-label">New Followers</p>
+                <p class="stat-description">Generated for clients</p>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-number">95%</span>
+                <p class="stat-label">Client Satisfaction</p>
+                <p class="stat-description">Return rate</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section - Collage Style -->
+    <section id="process" class="process">
+        <div class="section-header">
+            <h2 class="section-title">My Process</h2>
+            <p class="section-subtitle">From sketch to screen: bringing ideas to life</p>
+        </div>
+        <div class="sketch-collage">
+            <div class="sketch-item">
+                <div class="sketch-bg-1" style="width: 100%; height: 100%;"></div>
+                <span class="sketch-caption">Initial Concepts</span>
+            </div>
+            <div class="sketch-item">
+                <div class="sketch-bg-2" style="width: 100%; height: 100%;"></div>
+                <span class="sketch-caption">Character Sketches</span>
+            </div>
+            <div class="sketch-item">
+                <div class="sketch-bg-3" style="width: 100%; height: 100%;"></div>
+                <span class="sketch-caption">Storyboards</span>
+            </div>
+            <div class="sketch-item">
+                <div class="sketch-bg-4" style="width: 100%; height: 100%;"></div>
+                <span class="sketch-caption">Motion Studies</span>
+            </div>
+            <div class="sketch-item">
+                <div class="sketch-bg-5" style="width: 100%; height: 100%;"></div>
+                <span class="sketch-caption">Rough Animations</span>
+            </div>
+            <div class="sketch-item">
+                <div class="sketch-bg-6" style="width: 100%; height: 100%;"></div>
+                <span class="sketch-caption">Final Renders</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Contact -->
+    <footer id="contact">
+        <div class="footer-content">
+            <h2 class="section-title" style="color: white;">Let's Create Together</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 40px; color: #ccc;">
+                Have a project in mind? I'd love to hear about it.
+            </p>
+            <div class="social-links">
+                <a href="#" title="Email">✉</a>
+                <a href="#" title="LinkedIn">in</a>
+                <a href="#" title="Instagram">📷</a>
+                <a href="#" title="Behance">Be</a>
+                <a href="#" title="Twitter">🐦</a>
+            </div>
+            <p class="footer-text">© 2024 Joseph Koh (Jokoh). All rights reserved.</p>
+            <p style="margin-top: 20px; color: #888;">Designed & developed with ❤️</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Reel button click
+        document.querySelector('.reel-btn').addEventListener('click', () => {
+            alert('Reel video would open here! You can link this to a video modal or external link.');
+        });
+
+        // Parallax effect for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Add dynamic sketch effect to cursor
+        document.addEventListener('mousemove', (e) => {
+            const trail = document.createElement('div');
+            trail.style.cssText = `
+                position: fixed;
+                width: 4px;
+                height: 4px;
+                background: var(--accent);
+                border-radius: 50%;
+                pointer-events: none;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                opacity: 0.6;
+                z-index: 9999;
+                animation: fadeOut 1s forwards;
+            `;
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 1000);
+        });
+
+        // CSS for trail animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
